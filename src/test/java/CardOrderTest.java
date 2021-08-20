@@ -35,13 +35,13 @@ public class CardOrderTest {
         driver.findElement(By.cssSelector("input[name=phone]")).sendKeys("+71234567890");
         driver.findElement(By.className("checkbox")).click();
         driver.findElement(By.className("button")).click();
-        String actualText = driver.findElement(By.className("paragraph")).getText().trim();
+        String actualText = driver.findElement(By.cssSelector("[data-test-id=order-success]")).getText().trim();
         String expectedText = "Ваша заявка успешно отправлена! Наш менеджер свяжется с вами в ближайшее время.";
         Assertions.assertEquals(expectedText, actualText);
     }
 
     @Test
-    void formTest1() {
+    void shouldGetErrorMessageIfNameInLatin() {
         driver.findElement(By.cssSelector("input[name=name]")).sendKeys("Petrova Elisaveta");
         driver.findElement(By.cssSelector("input[name=phone]")).sendKeys("+71234567890");
         driver.findElement(By.className("checkbox")).click();
@@ -52,7 +52,7 @@ public class CardOrderTest {
     }
 
     @Test
-    void formTest2() {
+    void shouldGetErrorMessageIfNoPlusInFrontOfTheNumber() {
         driver.findElement(By.cssSelector("input[name=name]")).sendKeys("Петрова Елизавета");
         driver.findElement(By.cssSelector("input[name=phone]")).sendKeys("71234567890");
         driver.findElement(By.className("checkbox")).click();
@@ -63,22 +63,33 @@ public class CardOrderTest {
     }
 
     @Test
-    void formTest3() {
+    void shouldGetErrorMessageIfNoClickOnTheCheckbox() {
         driver.findElement(By.cssSelector("input[name=name]")).sendKeys("Петрова Елизавета");
         driver.findElement(By.cssSelector("input[name=phone]")).sendKeys("+71234567890");
         driver.findElement(By.className("button")).click();
-        String actualText = driver.findElement(By.cssSelector("[data-test-id=agreement] .checkbox__text")).getText().trim();
+        String actualText = driver.findElement(By.cssSelector("[data-test-id=agreement].input_invalid .checkbox__text")).getText().trim();
         String expectedText = "Я соглашаюсь с условиями обработки и использования моих персональных данных и разрешаю сделать запрос в бюро кредитных историй";
         Assertions.assertEquals(expectedText, actualText);
     }
 
     @Test
-    void formTest4() {
+    void shouldGetErrorMessageIfNameFieldIsEmpty() {
         driver.findElement(By.cssSelector("input[name=name]")).sendKeys("");
         driver.findElement(By.cssSelector("input[name=phone]")).sendKeys("+71234567890");
         driver.findElement(By.className("checkbox")).click();
         driver.findElement(By.className("button")).click();
         String actualText = driver.findElement(By.cssSelector("[data-test-id=name] .input__sub")).getText().trim();
+        String expectedText = "Поле обязательно для заполнения";
+        Assertions.assertEquals(expectedText, actualText);
+    }
+
+    @Test
+    void shouldGetErrorMessageIfTelFieldIsEmpty() {
+        driver.findElement(By.cssSelector("input[name=name]")).sendKeys("Петрова Елизавета");
+        driver.findElement(By.cssSelector("input[name=phone]")).sendKeys("");
+        driver.findElement(By.className("checkbox")).click();
+        driver.findElement(By.className("button")).click();
+        String actualText = driver.findElement(By.cssSelector("[data-test-id=phone] .input__sub")).getText().trim();
         String expectedText = "Поле обязательно для заполнения";
         Assertions.assertEquals(expectedText, actualText);
     }
